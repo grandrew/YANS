@@ -57,7 +57,10 @@ def create_nodes(nodes):
     if docker_machine_run("docker image inspect yans-node") != 0:
         docker_machine_run("docker load -i /data/yans-node.tar")
     for node in nodes:
-        client().containers.run('kennethjiang/yans-node', name=node.container_name, command='sleep 3153600000', detach=True, privileged=True)
+        if docker_machine_run("docker inspect " + node.container_name) != 0:
+            docker_machine_run("docker run --privileged -d --name " +
+                               node.container_name +
+                               " yans-node sleep 3153600000")
 
 
 def destroy_nodes(nodes):
