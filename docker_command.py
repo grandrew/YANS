@@ -66,9 +66,14 @@ def create_nodes(nodes):
 def destroy_nodes(nodes):
     for node in nodes:
         try:
-            client().containers.get(node.container_name).remove(force=True)
-        except docker.errors.NotFound:
+            docker_machine_run(
+                "docker container rm -f " + node.container_name, cont=True)
+        except docker.errors.ContainerError:
             pass
+    try:
+        docker_machine_run("docker image rm -f yans-node", cont=True)
+    except docker.errors.ImageNotFound:
+        pass
 
 
 def exec_in_node(node, args, will_return=False):
