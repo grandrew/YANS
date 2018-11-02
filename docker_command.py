@@ -102,10 +102,13 @@ def ensure_docker_machine():
     if not isAdmin():
         print "Must be ran with admin rights"
         sys.exit()
+    if is_linux():  # docker machine not required on linux
         return
 
     if not exists('docker-machine'):
-        sys.exit("docker-machine is required to run yans on Mac OS X. Please make sure it is installed and in $PATH")
+        sys.exit(
+            "docker-machine is required to run yans on Mac OS X. Please make sure it is installed and in $PATH"
+        )
 
     # create docker machine needed for YANS if one doesn't exist
     if run('docker-machine inspect YANS-machine', cont=True) != 0:
