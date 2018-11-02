@@ -1,4 +1,4 @@
-# YANS [![pipeline status](https://gitlab.balldayton.com/rnunez/YANS/badges/master/pipeline.svg)](https://gitlab.balldayton.com/rnunez/YANS/commits/master)
+# YANS 
 
 ## Yet Another Network Simulator
 
