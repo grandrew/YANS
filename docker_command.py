@@ -20,10 +20,9 @@ def exists(exe):
 def is_linux():
     return sys.platform == 'linux' or sys.platform == 'linux2'
 
-def run(cmd, cont=False):
-    debug('Running command: ' + cmd)
 
 def run(cmd, cont=False, popen=False):
+    debug('Running command: ' + cmd)
     import shlex
     args = shlex.split(cmd)
     if cont:
