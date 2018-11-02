@@ -6,6 +6,7 @@ import subprocess
 import os
 
 docker_client = None
+CWD = str(os.path.dirname(os.path.realpath(__file__))).replace('\\', '/')
 
 def exists(exe):
     return any(os.access(os.path.join(path, exe), os.X_OK) for path in os.environ["PATH"].split(os.pathsep))
