@@ -8,8 +8,14 @@ import os
 docker_client = None
 CWD = str(os.path.dirname(os.path.realpath(__file__))).replace('\\', '/')
 
+
 def exists(exe):
-    return any(os.access(os.path.join(path, exe), os.X_OK) for path in os.environ["PATH"].split(os.pathsep))
+    debug('Checking if ' + exe + ' exists')
+    if subprocess.call(exe, stdout=open('nul', 'w')) == 0:
+        return True
+    else:
+        return False
+
 
 def is_linux():
     return sys.platform == 'linux' or sys.platform == 'linux2'
