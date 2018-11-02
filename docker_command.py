@@ -96,6 +96,12 @@ def bind_interface(interface):
     docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' + interface.name)
 
 
+def isAdmin():
+    try:
+        is_admin = (os.getuid() == 0)
+    except AttributeError:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+    return is_admin
 
 
 def ensure_docker_machine():
@@ -104,7 +110,6 @@ def ensure_docker_machine():
         sys.exit()
     if is_linux():  # docker machine not required on linux
         return
-
     if not exists('docker-machine'):
         sys.exit(
             "docker-machine is required to run yans on Mac OS X. Please make sure it is installed and in $PATH"
