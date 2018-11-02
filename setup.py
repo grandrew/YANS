@@ -4,7 +4,6 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-
 REQUIRES = [
     'docopt',
     'PyYAML',
@@ -12,7 +11,9 @@ REQUIRES = [
     'termcolor',
 ]
 
+
 class PyTest(TestCommand):
+
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []
@@ -40,6 +41,7 @@ def find_version(fname):
         raise RuntimeError('Cannot find version information')
     return version
 
+
 __version__ = find_version("yans.py")
 
 
@@ -47,6 +49,7 @@ def read(fname):
     with open(fname) as fp:
         content = fp.read()
     return content
+
 
 setup(
     name='YANS',
@@ -63,8 +66,7 @@ setup(
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License', 'Natural Language :: English',
         "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
@@ -73,11 +75,6 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
     py_modules=["yans", "docker_command", "topology"],
-    entry_points={
-        'console_scripts': [
-            "yans = yans:main"
-        ]
-    },
+    entry_points={'console_scripts': ["yans = yans:main"]},
     tests_require=['pytest'],
-    cmdclass={'test': PyTest}
-)
+    cmdclass={'test': PyTest})

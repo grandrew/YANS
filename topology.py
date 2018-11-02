@@ -2,9 +2,12 @@ import yaml
 import uuid
 import string
 import sys
+from termcolor import colored, cprint
+
 
 class TopologySpecError(Exception):
     pass
+
 
 class Topology:
 
@@ -15,8 +18,12 @@ class Topology:
         # Figure out how many nodes in this topo
         link_spec = self.spec['links']
         node_list = [l.get('nodes', []) for l in link_spec]
-        flattened_node_list = [item for sublist in node_list for item in sublist] # Python's way to flatten nested lists. dont' ask me why: http://stackoverflow.com/questions/952914/making-a-flat-list-out-of-list-of-lists-in-python
-        uniq_nodes = set(flattened_node_list) # Python's way of getting unique list
+        # Python's way to flatten nested lists. dont' ask me why: http://stackoverflow.com/questions/952914/making-a-flat-list-out-of-list-of-lists-in-python
+        flattened_node_list = [
+            item for sublist in node_list for item in sublist
+        ]
+        # Python's way of getting unique list
+        uniq_nodes = set(flattened_node_list)
         self.nodes = [Node(n) for n in uniq_nodes]
 
         all_link_names = [l['name'] for l in link_spec]
@@ -25,7 +32,9 @@ class Topology:
 
         self.links = []
         for link_dict in link_spec:
-            ajacent_nodes = [n for n in self.nodes if n.name in link_dict.get('nodes', [])]
+            ajacent_nodes = [
+                n for n in self.nodes if n.name in link_dict.get('nodes', [])
+            ]
             self.links.append(Link(link_dict, ajacent_nodes))
 
     def node_by_name(self, name):
@@ -33,24 +42,24 @@ class Topology:
         return matches[0] if matches else None
 
     def draw(self):
-        from termcolor import colored, cprint
         print('')
         cprint('Link', 'green', end='')
-        sys.stdout.write(7*' ')
+        sys.stdout.write(7 * ' ')
         cprint('Network Interface', 'yellow', end='')
-        sys.stdout.write(5*' ')
+        sys.stdout.write(5 * ' ')
         cprint('Node', 'red')
-        print(50*'-' + '\n')
+        print(50 * '-' + '\n')
         for link in self.links:
             cprint(link.name, 'green')
             print('|')
             for interface in link.interfaces:
                 print('|')
-                sys.stdout.write(12*'-' + '<')
+                sys.stdout.write(12 * '-' + '<')
                 cprint(interface.name, 'yellow', end='')
-                sys.stdout.write('>' + 8*'-')
+                sys.stdout.write('>' + 8 * '-')
                 cprint(interface.node.name, 'red')
             print('')
+
 
 class Link:
 
@@ -81,4 +90,3 @@ class Node:
 def random_id(size=6, chars=string.letters + string.digits):
     import random
     return ''.join(random.choice(chars) for _ in range(size))
-
