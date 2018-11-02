@@ -1,4 +1,4 @@
-# YANS 
+# YANS [![Build Status](https://travis-ci.com/rnunez95/YANS.svg?branch=master)](https://travis-ci.com/rnunez95/YANS)
 
 ## Yet Another Network Simulator
 
