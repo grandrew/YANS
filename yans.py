@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 '''yans
 Yet Another Network Simulator
 
@@ -17,9 +15,9 @@ Options:
 '''
 
 from __future__ import unicode_literals, print_function
-from docopt import docopt
 import logging
 import sys
+from docopt import docopt
 
 from docker_command import destroy_links, create_nodes, create_links, ensure_docker_machine, destroy_nodes, bind_interface, exec_in_node
 from topology import Topology, TopologySpecError
@@ -27,6 +25,7 @@ from topology import Topology, TopologySpecError
 __version__ = "0.1.0"
 __author__ = "Kenneth Jiang"
 __license__ = "MIT"
+
 
 def main():
     '''Main entry point for the yans CLI.'''
@@ -66,7 +65,8 @@ def main():
         if node:
             exec_in_node(node, commands)
         else:
-            sys.exit('Node named "' + node_name + '" is not found in ' + topo_file)
+            sys.exit('Node named "' + node_name + '" is not found in ' +
+                     topo_file)
 
 
 if __name__ == '__main__':
