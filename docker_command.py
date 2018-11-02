@@ -33,7 +33,7 @@ def run(cmd, cont=False, popen=False):
     else:
         return subprocess.check_output(args)
 
-def docker_machine_run(cmd):
+
 def docker_machine_run(cmd, cont=False, popen=False):
     if is_linux():
         return run(cmd, cont, popen)
