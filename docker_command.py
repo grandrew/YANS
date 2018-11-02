@@ -113,6 +113,25 @@ def ensure_docker_machine():
         run("powershell -Command \"Start-Process PowerShell -Verb RunAs \"" +
             CWD + "/boot2docker/build-iso.py\"\"",
             cont=True)
+        print "Please wait while YANS-machine is set up \nThis may take some time..."
+        default_err = sys.stderr
+        prog = 0
+        while True:
+            sys.stdout.write('.')
+            prog += 1
+            if prog >= 30:
+                print "\n"
+                prog = 0
+            time.sleep(5)
+            try:
+                if os.path.isfile(CWD + "/boot2docker/complete.txt"):
+                    os.remove(CWD + "/boot2docker/complete.txt")
+                    sys.stderr = default_err
+                    print "Complete"
+                    break
+            except Exception as e:
+                pass
+                # make sure YANS-machine is started
 
 
 def client():
