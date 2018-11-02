@@ -5,7 +5,7 @@ Yet Another Network Simulator
 
 Usage:
   yans [-V] [-t --topo=<topo_path>] (up|stop|destroy)
-  yans [-V] [-t --topo=<topo_path>] console <node_name>
+  yans [-V] [-t --topo=<topo_path>] console <node_name> -c <commands>
   yans -h | --help
   yans --version
 
@@ -21,7 +21,7 @@ from docopt import docopt
 import logging
 import sys
 
-from docker_command import destroy_links, create_nodes, create_links, ensure_docker_machine, destroy_nodes, bind_interface, attach_node
+from docker_command import destroy_links, create_nodes, create_links, ensure_docker_machine, destroy_nodes, bind_interface, exec_in_node
 from topology import Topology, TopologySpecError
 
 __version__ = "0.1.0"
@@ -50,9 +50,10 @@ def main():
             for interface in link.interfaces:
                 bind_interface(interface)
         topo.draw()
-        print('To log into each node:')
+        print('To run commands in each node:')
         for node in topo.nodes:
-            print('`$ yans -t ' + topo_file + ' console ' + node.name + '`')
+            print('`$ yans -t ' + topo_file + ' console ' + node.name +
+                  ' -c <"Commands">`')
 
     if args['destroy']:
         destroy_nodes(topo.nodes)
@@ -60,9 +61,10 @@ def main():
 
     if args['console']:
         node_name = args['<node_name>']
+        commands = args['<commands>']
         node = topo.node_by_name(node_name)
         if node:
-            attach_node(node)
+            exec_in_node(node, commands)
         else:
             sys.exit('Node named "' + node_name + '" is not found in ' + topo_file)
 

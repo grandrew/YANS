@@ -51,10 +51,17 @@ def destroy_nodes(nodes):
         except docker.errors.NotFound:
             pass
 
-def attach_node(node):
-    set_docker_machine_env()
+
+def exec_in_node(node, args, will_return=False):
     import shlex
-    subprocess.call(shlex.split('docker exec -it --privileged ' + node.container_name + ' bash'), stdin=sys.stdin, stdout=sys.stdout)
+    set_docker_machine_env()
+    args = "docker-machine ssh YANS-machine docker exec --privileged " + \
+        node.container_name + " " + args
+    debug('Running command: ' + args)
+    if will_return:
+        return subprocess.check_output(shlex.split(args))
+    else:
+        subprocess.call(shlex.split(args), stdout=sys.stdout)
 
 def bind_interface(interface):
     docker_machine_run('sudo ip link add ' + interface.name + ' type veth peer name ' + interface.peer_name)
