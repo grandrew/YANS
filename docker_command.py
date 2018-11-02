@@ -51,7 +51,8 @@ def destroy_links(links):
         docker_machine_run('sudo brctl delbr ' + lnk.bridge_name)
 
 def create_nodes(nodes):
-    client().images.pull('kennethjiang/yans-node')
+    if docker_machine_run("docker image inspect yans-node") != 0:
+        docker_machine_run("docker load -i /data/yans-node.tar")
     for node in nodes:
         client().containers.run('kennethjiang/yans-node', name=node.container_name, command='sleep 3153600000', detach=True, privileged=True)
 
