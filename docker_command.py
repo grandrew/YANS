@@ -132,6 +132,7 @@ def ensure_docker_machine():
             except Exception as e:
                 pass
                 # make sure YANS-machine is started
+    run('docker-machine start YANS-machine', cont=True)
 
 
 def client():
