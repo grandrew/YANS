@@ -94,7 +94,12 @@ def bind_interface(interface):
     docker_machine_run('sudo ip link set ' + interface.peer_name + ' up')
     docker_machine_run('sudo brctl addif ' + interface.link.bridge_name + ' ' +
                        interface.peer_name)
-    docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' + interface.name)
+    container_pid = str(
+        json.loads(
+            docker_machine_run(
+                "docker inspect " + interface.node.container_name,
+                cont=False,
+                popen=True))[0]["State"]["Pid"])
     docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' +
                        interface.name)
 
