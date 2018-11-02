@@ -99,17 +99,20 @@ def bind_interface(interface):
 
 
 def ensure_docker_machine():
-    if is_linux(): # docker machine not required on linux
+    if not isAdmin():
+        print "Must be ran with admin rights"
+        sys.exit()
         return
 
     if not exists('docker-machine'):
         sys.exit("docker-machine is required to run yans on Mac OS X. Please make sure it is installed and in $PATH")
 
-    if run('docker-machine inspect YANS-machine', cont=True) != 0: # create docker machine needed for YANS if one doesn't exist
+    # create docker machine needed for YANS if one doesn't exist
+    if run('docker-machine inspect YANS-machine', cont=True) != 0:
         print('Creating docker machine that will host all YANS containers')
-        run('docker-machine create -d virtualbox --virtualbox-boot2docker-url https://github.com/kennethjiang/YANS/raw/master/boot2docker/boot2docker.iso YANS-machine')
-
-    run('docker-machine start YANS-machine', cont=True) # make sure YANS-machine is started
+        run("powershell -Command \"Start-Process PowerShell -Verb RunAs \"" +
+            CWD + "/boot2docker/build-iso.py\"\"",
+            cont=True)
 
 
 def client():
