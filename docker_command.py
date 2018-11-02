@@ -89,11 +89,14 @@ def exec_in_node(node, args, will_return=False):
 
 
 def bind_interface(interface):
-    docker_machine_run('sudo ip link add ' + interface.name + ' type veth peer name ' + interface.peer_name)
+    docker_machine_run('sudo ip link add ' + interface.name +
+                       ' type veth peer name ' + interface.peer_name)
     docker_machine_run('sudo ip link set ' + interface.peer_name + ' up')
-    docker_machine_run('sudo brctl addif ' + interface.link.bridge_name + ' ' + interface.peer_name)
-    container_pid = str(client().api.inspect_container( interface.node.container_name )['State']['Pid'])
+    docker_machine_run('sudo brctl addif ' + interface.link.bridge_name + ' ' +
+                       interface.peer_name)
     docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' + interface.name)
+    docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' +
+                       interface.name)
 
 
 def isAdmin():
