@@ -1,4 +1,4 @@
-FROM boot2docker/boot2docker
+FROM boot2docker/boot2docker:1.13.1
 ADD . $ROOTFS/data/
 WORKDIR /
 
