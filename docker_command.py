@@ -40,21 +40,25 @@ def docker_machine_run(cmd, cont=False, popen=False):
     else:
         return run('docker-machine ssh YANS-machine ' + cmd, cont, popen)
 
+
 def create_links(links):
     for lnk in links:
         docker_machine_run('sudo brctl addbr ' + lnk.bridge_name)
         docker_machine_run('sudo ip link set ' + lnk.bridge_name + ' up')
+
 
 def destroy_links(links):
     for lnk in links:
         docker_machine_run('sudo ip link set ' + lnk.bridge_name + ' down')
         docker_machine_run('sudo brctl delbr ' + lnk.bridge_name)
 
+
 def create_nodes(nodes):
     if docker_machine_run("docker image inspect yans-node") != 0:
         docker_machine_run("docker load -i /data/yans-node.tar")
     for node in nodes:
         client().containers.run('kennethjiang/yans-node', name=node.container_name, command='sleep 3153600000', detach=True, privileged=True)
+
 
 def destroy_nodes(nodes):
     for node in nodes:
@@ -75,12 +79,16 @@ def exec_in_node(node, args, will_return=False):
     else:
         subprocess.call(shlex.split(args), stdout=sys.stdout)
 
+
 def bind_interface(interface):
     docker_machine_run('sudo ip link add ' + interface.name + ' type veth peer name ' + interface.peer_name)
     docker_machine_run('sudo ip link set ' + interface.peer_name + ' up')
     docker_machine_run('sudo brctl addif ' + interface.link.bridge_name + ' ' + interface.peer_name)
     container_pid = str(client().api.inspect_container( interface.node.container_name )['State']['Pid'])
     docker_machine_run('sudo ip link set netns ' + container_pid + ' dev ' + interface.name)
+
+
+
 
 def ensure_docker_machine():
     if is_linux(): # docker machine not required on linux
@@ -100,11 +108,13 @@ def client():
     ensure_docker_client()
     return docker_client
 
+
 def ensure_docker_client():
     global docker_client
     if not docker_client:
         set_docker_machine_env()
         docker_client = docker.from_env()
+
 
 def set_docker_machine_env():
     if not is_linux():
