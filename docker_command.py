@@ -17,18 +17,23 @@ def is_linux():
 def run(cmd, cont=False):
     debug('Running command: ' + cmd)
 
+def run(cmd, cont=False, popen=False):
     import shlex
     args = shlex.split(cmd)
     if cont:
-        return subprocess.call(args, stdout=open(os.devnull, 'w'))
+        return subprocess.call(
+            args, stdout=open('nul', 'w'), stderr=open('nul', 'w'))
+    elif popen:
+        return subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
     else:
         return subprocess.check_output(args)
 
 def docker_machine_run(cmd):
+def docker_machine_run(cmd, cont=False, popen=False):
     if is_linux():
-        return run(cmd)
+        return run(cmd, cont, popen)
     else:
-        return run('docker-machine ssh YANS-machine ' + cmd)
+        return run('docker-machine ssh YANS-machine ' + cmd, cont, popen)
 
 def create_links(links):
     for lnk in links:
